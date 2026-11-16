@@ -152,10 +152,21 @@ public class MainActivity extends Activity {
                     request.setDescription("Downloading file...");
                     request.setNotificationVisibility(
                             DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-                    request.setDestinationInExternalPublicDir(
-                            Environment.DIRECTORY_DOWNLOADS,
-                            DownloadManager.Request
-                                    .getDefaultFileName(url, contentDisposition, mimeType));
+                    
+String fileName = Uri.parse(url).getLastPathSegment();
+
+if (fileName == null || fileName.trim().isEmpty()) {
+    fileName = "THISODA-download";
+}
+
+fileName = Uri.decode(fileName);
+fileName = fileName.replaceAll("[\\\\/:*?\"<>|]", "_");
+
+request.setDestinationInExternalPublicDir(
+    Environment.DIRECTORY_DOWNLOADS,
+    fileName
+);
+
                     DownloadManager manager = (DownloadManager)
                             getSystemService(Context.DOWNLOAD_SERVICE);
                     manager.enqueue(request);
